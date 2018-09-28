@@ -1,4 +1,5 @@
 from agent.agent import Agent
+from agent.memory import Memory
 from functions import *
 from preprocess_price import preprocess_price
 import sys
@@ -9,7 +10,10 @@ if len(sys.argv) != 4:
 
 stock_name, window_size, episode_count = sys.argv[1], int(sys.argv[2]), int(sys.argv[3])
 
-agent = Agent(window_size)
+max_queue_size = 100
+memory = Memory(max_queue_size)
+agent = Agent(window_size, memory)
+
 data = preprocess_price(stock_name)
 # data = getStockDataVec(stock_name)
 l = len(data) - 1
@@ -42,7 +46,7 @@ for e in range(episode_count + 1):
 			print("Sell: " + formatPrice(data[t]) + " | Profit: " + formatPrice(data[t] - bought_price))
 
 		done = True if t == l - 1 else False
-		agent.memory.append((state, action, reward, next_state, done))
+		agent.memory.add((state, action, reward, next_state, done))
 		state = next_state
 
 		if done:
@@ -50,7 +54,7 @@ for e in range(episode_count + 1):
 			print("Total Profit: " + formatPrice(total_profit))
 			print("--------------------------------")
 
-		if len(agent.memory) > batch_size:
+		if len(agent.memory.buffer) > batch_size:
 			agent.expReplay(batch_size)
 
 	if e % 10 == 0:

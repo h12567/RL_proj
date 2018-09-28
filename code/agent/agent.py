@@ -13,7 +13,7 @@ import os
 from collections import deque
 
 class Agent:
-	def __init__(self, state_size, is_eval=False, model_name=""):
+	def __init__(self, state_size, memory, is_eval=False, model_name=""):
 		self.state_size = state_size # normalized previous days
 		self.action_size = 3 # sit, buy, sell
 		self.memory = deque(maxlen=1000)
@@ -26,6 +26,8 @@ class Agent:
 		self.epsilon_min = 0.01
 		self.epsilon_decay = 0.995
 		self.firstIter = True
+
+		self.memory = memory
 
 		self.model = load_model("models/" + model_name) if is_eval else self._model()
 
@@ -57,7 +59,7 @@ class Agent:
 		# l = len(self.memory)
 		# for i in range(l - batch_size + 1, l):
 		# 	mini_batch.append(self.memory.popleft())
-		mini_batch = random.sample(self.memory, batch_size)
+		mini_batch = self.memory.sample(batch_size)
 
 		for state, action, reward, next_state, done in mini_batch:
 			target = reward
