@@ -1,7 +1,6 @@
 import os
 from os import listdir
-from os.path 
-import isfile, join
+from os.path import isfile, join
 import numpy as np
 import matplotlib.pyplot as plt
 import json
@@ -14,7 +13,7 @@ def normalize(data):
     data = np.array(list(map(lambda x: (2* x - (max_data + min_data)) / (max_data - min_data), data)))
     return data
   
-def prepare_price(stock, window_size, missing_dates):
+def preprocess_price(stock):
     date1 = '2014-01-01'
     date2 = '2015-12-31'
     start = datetime.datetime.strptime(date1, '%Y-%m-%d')
@@ -24,9 +23,8 @@ def prepare_price(stock, window_size, missing_dates):
     TOTAL_ROWS_NASDAQ = 50000
     USE_COLS = [0, 4]
 
-    nasdaq = pd.read_csv("./data/" + stock + ".csv", skiprows=1, nrows=TOTAL_ROWS_NASDAQ, usecols=USE_COLS, header=None)
+    nasdaq = pd.read_csv("../data/" + stock + ".csv", skiprows=1, nrows=TOTAL_ROWS_NASDAQ, usecols=USE_COLS, header=None)
     nasdaq = nasdaq.values
-    print(nasdaq.shape)
 
     for i in range(nasdaq.shape[0]):
         current_date = nasdaq[i, 0]
@@ -46,19 +44,6 @@ def prepare_price(stock, window_size, missing_dates):
     prices = prices.fillna(method='bfill')
     prices = prices.fillna(method='ffill')
     prices = prices.values.flatten()
-
-    final_prices = []
-    for i in range(prices.shape[0]):
-        if(i in missing_dates):
-            a = 1
-        else:
-            final_prices.append(prices[i])
-
-    final_prices = np.array(final_prices)
     # prices = normalize(prices)
-    if(window_size == -1):
-        return final_prices
-    else:
-        return final_prices[window_size-1:]
+    return np.array(prices).tolist()
 
-# b=prepare_price("AAPL", -1)
