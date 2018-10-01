@@ -4,6 +4,7 @@ from keras.models import load_model
 from agent.agent import Agent
 from functions import *
 from preprocess_price import preprocess_price
+from keras.models import clone_model
 import sys
 
 if len(sys.argv) != 3:
@@ -35,6 +36,11 @@ for t in range(l):
 		action = 1
 	else: 
 		action = agent.act(state)
+
+
+	if ( (t % 20) == 0 ) :
+		agent.target_model = clone_model(agent.model)
+		agent.target_model.set_weights(agent.model.get_weights())
 
 	# sit
 	next_state = getState(data, t + 1, window_size + 1)

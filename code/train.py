@@ -2,6 +2,7 @@ from agent.agent import Agent
 from agent.memory import Memory
 from functions import *
 from preprocess_price import preprocess_price
+from keras.models import clone_model
 import sys
 
 if len(sys.argv) != 4:
@@ -22,6 +23,10 @@ batch_size = 32
 for e in range(episode_count + 1):
 	print ("Episode " + str(e) + "/" + str(episode_count))
 	state = getState(data, 0, window_size + 1)
+
+	if ( (e % 20) == 0 ) :
+		agent.target_model = clone_model(agent.model)
+		agent.target_model.set_weights(agent.model.get_weights())
 
 	total_profit = 0
 	agent.inventory = []

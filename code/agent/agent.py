@@ -1,7 +1,7 @@
 import keras
 from keras import backend as K
 from keras.models import Sequential
-from keras.models import load_model
+from keras.models import load_model, clone_model
 from keras.layers import Dense
 from keras.optimizers import Adam
 
@@ -30,6 +30,8 @@ class Agent:
 		self.memory = memory
 
 		self.model = load_model("models/" + model_name) if is_eval else self._model()
+		self.target_model = clone_model(self.model)
+		self.target_model.set_weights(self.model.get_weights())
 
 	def _model(self):
 		model = Sequential()
@@ -64,7 +66,7 @@ class Agent:
 		for state, action, reward, next_state, done in mini_batch:
 			target = reward
 			if not done:
-				target = reward + self.gamma * np.amax(self.model.predict(next_state)[0])
+				target = reward + self.gamma * np.amax(self.target_model.predict(next_state)[0])
 
 			target_f = self.model.predict(state)
 			target_f[0][action] = target
