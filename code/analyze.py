@@ -10,8 +10,8 @@ from keras.models import load_model
 from random import *
 
 iA
-	print("Usage: python3 train.py [stock] [window] [episodes]")
-	exit()
+    print("Usage: python3 train.py [stock] [window] [episodes]")
+    exit()
 
 stock_name, window_size, episode_count = sys.argv[1], int(sys.argv[2]), int(sys.argv[3])
 

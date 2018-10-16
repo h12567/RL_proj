@@ -8,8 +8,8 @@ from keras.models import clone_model
 import sys
 
 if len(sys.argv) != 3:
-	print ("Usage: python evaluate.py [stock] [model]")
-	exit()
+    print ("Usage: python evaluate.py [stock] [model]")
+    exit()
 
 stock_name, model_name = sys.argv[1], sys.argv[2]
 model = load_model("models/" + model_name)
@@ -32,38 +32,38 @@ agent.inventory = []
 # agent.memory.append((state, action, reward, next_state, done))
 
 for t in range(l):
-	if t == 0:
-		action = 1
-	else: 
-		action = agent.act(state)
+    if t == 0:
+        action = 1
+    else: 
+        action = agent.act(state)
 
 
-	if ( (t % 20) == 0 ) :
-		agent.target_model = clone_model(agent.model)
-		agent.target_model.set_weights(agent.model.get_weights())
+    if ( (t % 20) == 0 ) :
+        agent.target_model = clone_model(agent.model)
+        agent.target_model.set_weights(agent.model.get_weights())
 
-	# sit
-	next_state = getState(data, t + 1, window_size + 1)
-	reward = 0
+    # sit
+    next_state = getState(data, t + 1, window_size + 1)
+    reward = 0
 
-	if action == 1: # buy
-		agent.inventory.append(data[t])
-		print ("Buy: " + formatPrice(data[t]))
+    if action == 1: # buy
+        agent.inventory.append(data[t])
+        print ("Buy: " + formatPrice(data[t]))
 
-	elif action == 2 and len(agent.inventory) > 0: # sell
-		bought_price = agent.inventory.pop(0)
-		reward = max(data[t] - bought_price, 0)
-		total_profit += data[t] - bought_price
-		print ("Sell: " + formatPrice(data[t]) + " | Profit: " + formatPrice(data[t] - bought_price))
+    elif action == 2 and len(agent.inventory) > 0: # sell
+        bought_price = agent.inventory.pop(0)
+        reward = max(data[t] - bought_price, 0)
+        total_profit += data[t] - bought_price
+        print ("Sell: " + formatPrice(data[t]) + " | Profit: " + formatPrice(data[t] - bought_price))
 
-	done = True if t == l - 1 else False
-	agent.memory.append((state, action, reward, next_state, done))
-	state = next_state
+    done = True if t == l - 1 else False
+    agent.memory.append((state, action, reward, next_state, done))
+    state = next_state
 
-	if len(agent.memory) > batch_size:
-		agent.expReplay(batch_size) 
+    if len(agent.memory) > batch_size:
+        agent.expReplay(batch_size) 
 
-	if done:
-		print ("--------------------------------")
-		print (stock_name + " Total Profit: " + formatPrice(total_profit))
-		print ("--------------------------------")
+    if done:
+        print ("--------------------------------")
+        print (stock_name + " Total Profit: " + formatPrice(total_profit))
+        print ("--------------------------------")

@@ -1,4 +1,4 @@
-
+import tensorflow as tf
 from collections import deque
 import numpy as np
 import random
