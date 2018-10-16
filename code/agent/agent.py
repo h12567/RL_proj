@@ -65,24 +65,13 @@ class Agent:
 		return model
 
 	#Action
-	def act(self, state, t):
-		rand_val = np.random.rand()
-		rand_val2 = np.random.rand()
-		rand_val3 = np.random.rand()
+	def act(self, state):
+		if not self.is_eval and rand_val <= self.epsilon:
+			return random.randrange(self.action_size)
 		if(self.firstIter):
 			self.firstIter = False
 			return 1
 		options = self.model.predict(state)
-		if t in a:
-			if(rand_val2 < 0.6):
-				return 1
-		elif t in b:
-			print(b)
-			if(rand_val3 < 0.6):
-				return 2
-		
-		if not self.is_eval and rand_val <= self.epsilon:
-			return random.randrange(self.action_size)
 		#print("Using prediction")
 		
 		return np.argmax(options[0])
