@@ -13,8 +13,8 @@ def normalize(data):
     return data
   
 def preprocess_price(stock):
-    date1 = '2013-01-01'
-    date2 = '2016-12-31'
+    date1 = '2014-01-01'
+    date2 = '2015-12-31'
     start = datetime.datetime.strptime(date1, '%Y-%m-%d')
     end = datetime.datetime.strptime(date2, '%Y-%m-%d')
     step = datetime.timedelta(days=1)
@@ -29,7 +29,7 @@ def preprocess_price(stock):
         current_date = nasdaq[i, 0]
         current_year = current_date.split("-")[0]
         price = nasdaq[i, 1]
-        if (current_year =='2013' or current_year == '2014' or current_year == '2015' or current_year == '2016'):
+        if (current_year == '2014' or current_year == '2015'):
             while(current_date != str(start.date())):
                 prices.append(np.nan)
                 start += step
