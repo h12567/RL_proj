@@ -1,10 +1,9 @@
-import pandas as pd
-import os
 import matplotlib.pyplot as plt
 import numpy as np
 import pywt
 import math
 
+# Note: need to install pywt and PyWavelets
 class denoise_data():
 
     def __init__(self, level=1):
