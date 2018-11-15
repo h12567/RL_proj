@@ -30,13 +30,13 @@ class UPAgent:
         s = s[0]
         a = a[0]
 
-        close_price = get_close_price(s)
-        close_price = np.reshape(close_price, (1, close_price.size))
+        x = get_close_price(s)
+        x = np.reshape(x, (1, x.size))
 
         if self.W is None:
-            self.init_portfolio(close_price)
+            self.init_portfolio(x)
 
-        self.S = np.multiply(self.S, self.W * np.matrix(close_price).T)
+        self.S = np.multiply(self.S, self.W * np.matrix(x).T)
         a = self.W.T * self.S
         pv = a / np.sum(a)
         pvn = np.ravel(pv)

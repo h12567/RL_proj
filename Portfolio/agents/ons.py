@@ -24,8 +24,8 @@ class ONSAgent:
             weights = np.array([1. / n] * n)
             weights = weights[None, :]
         else:
-            close_price = get_close_price(s)
-            grad = np.mat(close_price / np.dot(a, close_price)).T
+            x = get_close_price(s)
+            grad = np.mat(x / np.dot(a, x)).T
 
             self.A += grad * grad.T
             self.b += (1 + 1. / self.beta) * grad
