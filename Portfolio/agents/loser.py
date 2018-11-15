@@ -8,12 +8,10 @@ import numpy as np
 
 class Loser:
     def predict(self, s, a):
-        returns = []
-        for i, prices in enumerate(s[0]):
-            cur_price = prices[-1][0]
-            yst_price = prices[-2][0]
-            returns.append(cur_price / yst_price)
-        weights = np.zeros(len(s[0]))
+        s = s[0]
+        returns = [prices[-1][0] / prices[-2][0] for i, prices in enumerate(s)]
+
+        weights = np.zeros(len(s))
         weights[np.argmin(returns)] = 1
         weights = weights[None, :]
         return weights
